@@ -15,7 +15,15 @@
 ## 教务助手主页
 https://github.com/CCluv/JiaowuHelper/
 
-原作:
+##原作:
 
 http://www.loveyu.net/JiaowuHelper
 
+##更新日志
+
+20151204:
+默认不请求验证码(绝大部分正方只要不请求服务器就不要求验证)
+
+更新大部分代码内部正则表达式
+
+适配多版本正方系统(个别版本部分功能仍有问题)
