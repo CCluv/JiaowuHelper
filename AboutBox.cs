@@ -12,8 +12,8 @@ namespace JiaowuHelper
 		public AboutBox()
 		{
 			InitializeComponent();
-			this.Text = String.Format("关于 {0}", AssemblyTitle);
-			this.labelProductName.Text = AssemblyProduct;
+            this.Text = String.Format("关于 {0}", AssemblyTitle);
+            this.labelProductName.Text = AssemblyProduct;
 			this.labelVersion.Text = String.Format("版本 {0}", AssemblyVersion);
 			this.labelCopyright.Text = AssemblyCopyright;
 			this.labelCompanyName.Text = AssemblyCompany;
@@ -114,5 +114,9 @@ namespace JiaowuHelper
 		{
 			Browser.openAuthorPage();
 		}
-	}
+
+        private void AboutBox_Load(object sender, EventArgs e) {
+           
+        }
+    }
 }

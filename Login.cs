@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.Web;
+using System.Diagnostics;
 
 namespace JiaowuHelper
 {
@@ -13,7 +14,8 @@ namespace JiaowuHelper
 		private bool isLogoutFlag = false;
 		private static Login self = null;
 		public string homeUrl = "";
-		public CookieCollection cookie;
+        public string staticUrl = "";
+        public CookieCollection cookie;
 		public string loginPage;
 		public string loginActionPage = "";
 		public string id = "";
@@ -65,11 +67,15 @@ namespace JiaowuHelper
 		}
 		public bool PageInfoParse(string page)
 		{
-			Regex reg = new Regex("<span id=\"xhxm\">" + id + "  (.+?)同学</span>");
+            Debug.WriteLine(page);
+			Regex reg = new Regex("xm=(.+?)&");
 			Match match = reg.Match(page);
-			if (match.Value == "") return false;
-			string t1 = "<span id=\"xhxm\">" + id;
-			name = match.Value.Substring(t1.Length, match.Value.Length - t1.Length - "同学</span>".Length).Trim();
+            if (match.Value == "")
+            {
+                return false;
+            }
+			string t1 = "xm=";
+			name = match.Value.Substring(t1.Length, match.Value.Length - t1.Length-1).Trim();
 			urlName = HttpUtility.UrlEncode(name, Encoding.GetEncoding("gb2312")).Trim().ToUpper();
 			return true;
 		}

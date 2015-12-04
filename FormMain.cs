@@ -76,7 +76,7 @@ namespace JiaowuHelper
 		}
 		private void FormMain_Load(object sender, EventArgs e)
 		{
-			this.Icon = Resource.jiaowu;
+			//this.Icon = Resource.jiaowu;
 			Location = Postion.getPostion(this, 0.4f, 0.4f, null);
 			Activate();
 			this.Text = "欢迎 " + Login.get().name + " 登录 " + this.Text;
@@ -159,7 +159,7 @@ namespace JiaowuHelper
 
 		private void ToolStripMenuItem_JiaowuSite_Click(object sender, EventArgs e)
 		{
-			Browser.openUrl(login.homeUrl);
+			Browser.openUrl(login.staticUrl);
 		}
 
 		private void ToolStripMenuItem_author_Click(object sender, EventArgs e)

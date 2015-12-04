@@ -13,10 +13,15 @@ namespace JiaowuHelper
 			th.Start();
 		}
 		private void process() {
-			string page = Url.readHtml(Url.getPageStream(Browser.updateUrl));
+            return;
+            string page = Url.readHtml(Url.getPageStream(Browser.updateUrl));
 			if (page == "") return;
 			string[] list = page.Split('\n');
-			Version vsNew = new Version(list[0]);
+            if (list[0].Length > 5)
+            {
+                return;
+            }
+			Version vsNew = new Version(list[0]); 
 			Version vs = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 			if (vsNew.CompareTo(vs) <= 0) return;
 			if (MessageBox.Show(Encoding.UTF8.GetString(Encoding.GetEncoding("gb2312").GetBytes(page)), "是否升级新版本？",

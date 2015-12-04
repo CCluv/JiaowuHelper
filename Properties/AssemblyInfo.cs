@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("正方教务系统学生助手")]
-[assembly: AssemblyDescription("一个简易的教务系统帮助工具，简化成绩等信息的查询与学生选课的复杂性")]
+[assembly: AssemblyDescription("齐鲁工业大学孙兆政更新修复的一个简易的教务系统帮助工具，简化成绩等信息的查询与学生选课的复杂性.\r\n开源地址:\r\n https://github.com/CCluv/JiaowuHelper \r\n原作者Loveyu.\r\n原作地址:\r\n https://github.com/loveyu/JiaowuHelper")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Loveyu")]
+[assembly: AssemblyCompany("QLU")]
 [assembly: AssemblyProduct("JiaowuHelper")]
-[assembly: AssemblyCopyright("Copyright © Loveyu 2013")]
+[assembly: AssemblyCopyright("CopyLeft © Szz 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // 可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
+[assembly: AssemblyFileVersion("1.2.0.0")]

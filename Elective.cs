@@ -32,7 +32,7 @@ namespace JiaowuHelper
 				Thread.Sleep(1000);
 			}
 
-			Url.writeFile(page, "E:\\elective.html");
+			//Url.writeFile(page, "E:\\elective.html");
 
 			if (page == "" || checkClosed() == true) return false;
 
@@ -45,7 +45,7 @@ namespace JiaowuHelper
 				Thread.Sleep(1000);
 			}
 
-			Url.writeFile(page, "E:\\elective.post.html");
+			//Url.writeFile(page, "E:\\elective.post.html");
 
 			return status = (ParseSelected() && ParseCurriculm());
 		}

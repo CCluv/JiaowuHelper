@@ -15,7 +15,7 @@ namespace JiaowuHelper
 			string page = Url.readHtml(Url.getPageStream(Login.get().homeUrl + "xsgrxx.aspx?xh=" + Login.get().id + "&xm=" + Login.get().urlName + "&gnmkdm=N121501"));
 			
 			Dictionary<string, string> rt = new Dictionary<string, string>();
-			Url.writeFile(page, "E:\\info.html");
+			//Url.writeFile(page, "E:\\info.html");
 
 			int n = "</span>".Length;
 
@@ -124,7 +124,7 @@ namespace JiaowuHelper
 			Login login = Login.get();
 			string url = login.homeUrl + "xskbcx.aspx?xh=" + login.id + "&xm=" + login.urlName + "&gnmkdm=N121602";
 			string page = Url.readHtml(Url.getPageStream(url));
-			Url.writeFile(page, "E://curriculum.html");
+			//Url.writeFile(page, "E://curriculum.html");
 			Regex regex = new Regex("<table id=\"Table1\"(.+?)</table>", RegexOptions.Singleline);
 			Match match = regex.Match(page);
 			if (match.Value == "") return "";
@@ -136,7 +136,7 @@ namespace JiaowuHelper
 			Login login = Login.get();
 			string url = login.homeUrl + "xskscx.aspx?xh=" + login.id + "&xm=" + login.urlName + "&gnmkdm=N121606";
 			string page = Url.readHtml(Url.getPageStream(url));
-			Url.writeFile(page,"E:\\TestInfo.html");
+			//Url.writeFile(page,"E:\\TestInfo.html");
 			if (page == null) return null;
 			Regex reg = new Regex("<table(.+?)id=\"DataGrid1\"(.+?)/table>", RegexOptions.Singleline);
 			Match match = reg.Match(page);
@@ -151,7 +151,7 @@ namespace JiaowuHelper
 			Login login = Login.get();
 			string url = login.homeUrl + "xsdjkscx.aspx?xh="+login.id+"&xm="+login.urlName+"&gnmkdm=N121606";
 			string page = Url.readHtml(Url.getPageStream(url));
-			Url.writeFile(page,"E:\\TestLevelInfo.html");
+			//Url.writeFile(page,"E:\\TestLevelInfo.html");
 			if (page == null) return null;
 			Regex reg = new Regex("<table(.+?)id=\"DataGrid1\"(.+?)/table>", RegexOptions.Singleline);
 			Match match = reg.Match(page);

@@ -14,7 +14,7 @@ namespace JiaowuHelper
 	{
 		Login login;
 		FormHelper helper;
-		bool show_checkCode = true;
+		bool show_checkCode = false;
 		bool trueLoginPage = false;
 		bool firstRun = true;
 		
@@ -33,17 +33,25 @@ namespace JiaowuHelper
 		private void loadConfig()
 		{
 			ConfigInfo ci = Login.get().ci;
-			if (ci.url == "")
-			{
-				Random random = new Random();
-				if (random.Next(2) == 0)
-				{
-					textBox_url.Text = "http://jw1.hustwenhua.net/";
-				}
-				else
-				{
-					textBox_url.Text = "http://jw2.hustwenhua.net/";
-				}
+            if (ci.url == "") {
+                Random random = new Random();
+                switch(random.Next(3)){
+                    case 0:
+                {
+                    textBox_url.Text = "http://210.44.159.4/";
+                            break;
+                }
+                        case 1:
+                {
+                    textBox_url.Text = "http://210.44.159.20/";
+                            break;
+                }
+                    default:
+                        {
+                            textBox_url.Text = "http://210.44.159.4/";
+                            break;
+                        }
+                 }
 			}
 			else
 			{
@@ -80,16 +88,18 @@ namespace JiaowuHelper
 				{
 					//自动检测验证码
 
-					checkBox_checkCode.Checked = show_checkCode = login.requirdCheckCode;
-					checkBox_checkCode_CheckedChanged(null, null);
+					//checkBox_checkCode.Checked = show_checkCode = login.requirdCheckCode;
+					//checkBox_checkCode_CheckedChanged(null, null);
 
 					if (match.Value == "" || match.Value == null)
 					{
 						login.homeUrl = uri.ToString();
-					}
+                        login.staticUrl = login.homeUrl;
+                    }
 					else
 					{
 						login.homeUrl = match.Value;
+                        login.staticUrl = login.homeUrl;
 					}
 					trueLoginPage = true;
 					setCheckCode();
@@ -100,11 +110,11 @@ namespace JiaowuHelper
 		private void setCheckCode()
 		{
 			if (checkBox_checkCode.Checked == false) return;
-			if (!Login.get().requirdCheckCode)
-			{
-				if (MessageBox.Show("检测到登录界面不需要验证码，是否继续显示？", "异常操作", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-					return;
-			}
+			//if (!Login.get().requirdCheckCode)
+			//{
+			//	if (MessageBox.Show("检测到登录界面不需要验证码，是否继续显示？", "异常操作", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+			//		return;
+			//}
 			if (show_checkCode)
 			{
 				while (true)
@@ -143,7 +153,7 @@ namespace JiaowuHelper
 			}
 			if (textBox_url.Text == "" || textBox_username.Text == "" || textBox_password.Text == "")
 			{
-				MessageBox.Show("登录表单有误,至少提交用户名和密码", "警告", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("登录表单有误,地址 用户名 密码三项必填", "警告", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				return;
 			}
 			if (Url.PostLogin(getForm()))
@@ -162,30 +172,75 @@ namespace JiaowuHelper
 		}
 		private string getForm()
 		{
-			Regex reg = new Regex("<form name=\"form1\" method=\"post\" action=\"(.+?)\" id=\"form1\">");
+			Regex reg = new Regex("action=\"(.+?)\" ");
 			Match match = reg.Match(login.loginPage);
-			int n1 = "<form name=\"form1\" method=\"post\" action=\"".Length;
-			int n2 = "\" id=\"form1\">".Length;
+			int n1 = "action=\"".Length;
+			int n2 = "\" ".Length;
 			login.loginActionPage = login.homeUrl + match.Value.Substring(n1, match.Value.Length - n1 - n2);
-			reg = new Regex("<input type=\"hidden\" name=\"__VIEWSTATE\" value=\"(.+?)\" />");
-			match = reg.Match(login.loginPage);
-			n1 = "<input type=\"hidden\" name=\"__VIEWSTATE\" value=\"".Length;
-			n2 = "\" />".Length;
-
+			reg = new Regex("\"__VIEWSTATE\" value=\"(.+?)\"");
+            /*
+            <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTMzMzIxNTg3OWRk6klhbJMzNV8MFPW5Znuu4duJhdw=" />
+__VIEWSTATE=dDwtMTMxNjk0NzYxNTs7PpK7CYMIAY8gja8M8G8YpGL8ZEAL__VIEWSTATEGENERATOR=92719903&txtUserName=201301011166&TextBox2=ling77&TextBox3=&Button1=&lbLanguage=&RadioButtonList1=%d1%a7%c9%fa
+            */
+            match = reg.Match(login.loginPage);
+			n1 = "\"__VIEWSTATE\" value=\"".Length;
 			Encoding encoding = Encoding.GetEncoding("gb2312");
 			string rt = "";
-			rt = HttpUtility.UrlEncode("__VIEWSTATE", encoding) + "=" + HttpUtility.UrlEncode(match.Value.Substring(n1, match.Value.Length - n1 - n2), encoding);
-			rt += "&" + HttpUtility.UrlEncode("TextBox1", encoding) + "=" + HttpUtility.UrlEncode(textBox_username.Text, encoding);
+            if (match.Value.Length == 0)
+            {
+                MessageBox.Show("Regex match failed in getForm()", "警告", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return rt;
+            }
+			rt = HttpUtility.UrlEncode("__VIEWSTATE", encoding) 
+                + "="
+                + HttpUtility.UrlEncode(
+                match.Value.Substring(n1, match.Value.Length - n1 - 1
+                ), encoding);
+            reg = new Regex("__VIEWSTATEGENERATOR\" value=\"(.+?)\"");
+            match = reg.Match(login.loginPage);
+            n1 = "__VIEWSTATEGENERATOR\" value=\"".Length;
+            if (match.Value != "") {
+                rt += "&"+HttpUtility.UrlEncode("__VIEWSTATEGENERATOR", encoding)
+                                + "="
+                                + HttpUtility.UrlEncode(
+                                match.Value.Substring(n1, match.Value.Length - n1 - 1
+                                ), encoding);
+            }
+            reg = new Regex("hidPdrs(.+?)hidPdrs");
+            match = reg.Match(login.loginPage);
+            if (match.Value != "") {
+                rt += "&" 
+                    + HttpUtility.UrlEncode("hidPdrs", encoding)
+                    + "=";
+            }
+            reg = new Regex("hidsc(.+?)hidsc");
+            match = reg.Match(login.loginPage);
+            if (match.Value != "") {
+                rt += "&"
+                    + HttpUtility.UrlEncode("hidsc", encoding)
+                    + "=";
+            }
+            reg = new Regex("__EVENTVALIDATION\" value=\"(.+?)\"");
+            match = reg.Match(login.loginPage);
+            n1 = "__EVENTVALIDATION\" value=\"".Length;
+            if (match.Value != "") {
+                rt += "&" + HttpUtility.UrlEncode("__EVENTVALIDATION", encoding)
+                                + "="
+                                + HttpUtility.UrlEncode(
+                                match.Value.Substring(n1, match.Value.Length - n1 - 1
+                                ), encoding);
+            }
+            rt += "&" + HttpUtility.UrlEncode("txtUserName", encoding) + "=" + HttpUtility.UrlEncode(textBox_username.Text, encoding);
 			login.id = textBox_username.Text;
 			rt += "&" + HttpUtility.UrlEncode("TextBox2", encoding) + "=" + HttpUtility.UrlEncode(textBox_password.Text, encoding);
-			rt += "&" + HttpUtility.UrlEncode("TextBox3", encoding) + "=" + HttpUtility.UrlEncode(textBox_checkcode.Text, encoding);
+            rt += "&" + HttpUtility.UrlEncode("TextBox3", encoding) + "=" + HttpUtility.UrlEncode(textBox_checkcode.Text, encoding);
 			rt += "&" + HttpUtility.UrlEncode("Button1", encoding) + "=" + HttpUtility.UrlEncode("", encoding);
 			rt += "&" + HttpUtility.UrlEncode("lbLanguage", encoding) + "=" + HttpUtility.UrlEncode("", encoding);
 			rt += "&" + HttpUtility.UrlEncode("RadioButtonList1", encoding) + "=" + HttpUtility.UrlEncode("学生", encoding);
 			return rt;
 		}
-
-		private void FormLogin_KeyDown(object sender, KeyEventArgs e)
+       
+        private void FormLogin_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.KeyValue == 13)
 			{
@@ -271,15 +326,32 @@ namespace JiaowuHelper
 
 		private void FormLogin_Load(object sender, EventArgs e)
 		{
-			this.Icon = Resource.jiaowu;
+           // this.Icon = JiaowuHelper.Resource.jiaowu;
 			Location = Postion.getPostion(this, 0.4f, 0.4f, null);
 			loadConfig();
 			setSiteUrl();
-		}
+            checkBox_checkCode.CheckState = CheckState.Unchecked;
+            checkBox_checkCode.Checked = false;
+        }
 
 		private void button_about_Click(object sender, EventArgs e)
 		{
-			new AboutBox().ShowDialog();
-		}
-	}
+			new AboutBox().ShowDialog(); setSiteUrl();
+        }
+
+        private void Url1_Click(object sender, EventArgs e)
+        {
+            textBox_url.Text = "http://210.44.159.4/"; setSiteUrl();
+        }
+
+        private void Url2_Click(object sender, EventArgs e)
+        {
+            textBox_url.Text = "http://210.44.159.22/"; setSiteUrl();
+        }
+
+        private void Url3_Click(object sender, EventArgs e)
+        {
+            textBox_url.Text = "http://210.44.159.20/"; setSiteUrl();
+        }
+    }
 }

@@ -31,9 +31,11 @@ namespace JiaowuHelper
 				}
 				string loginPgae = readHtml(ResponseObject.GetResponseStream());
 				Login.get().setloginPage(loginPgae);
-				writeFile(Login.get().loginPage, "E:\\login.html");
-			}
-			catch (Exception ex)
+                Debug.WriteLine(loginPgae);
+				//writeFile(Login.get().loginPage, "E:\\login.html");
+               
+            }
+            catch (Exception ex)
 			{
 				Debug.WriteLine(ex.Message);
 				return null;
@@ -66,15 +68,23 @@ namespace JiaowuHelper
 			//进行登录验证
 			try
 			{
+                Debug.WriteLine(Login.get().loginActionPage);
+                Debug.WriteLine(form);
 				Stream stream = getPostStream(Login.get().loginActionPage, form);
 				if (stream == null) return false;
 				string result = readHtml(stream);
-				writeFile(result, @"E:\\post.html");
+                //Debug.WriteLine(result);
+				//writeFile(result, @"E:\\post.html");
 				if (Login.get().PageInfoParse(result) == false)
 				{
-					//获取登录错误提示
-					Regex reg = new Regex("<script language='javascript' defer>alert\\('(.+?)'\\);document.getElementById");
-					Match match = reg.Match(result);
+                    //获取登录错误提示
+                    Regex reg = new Regex("<title>(.+?)</title>");
+                    Match match = reg.Match(result);
+                    if (match.Value == "<title>ERROR - 出错啦！</title>") {
+                        Login.get().LoginError = "可能错误原因：系统正忙！\n请换服务器或重试";
+                    }
+                     reg = new Regex("<script language='javascript' defer>alert\\('(.+?)'\\);document.getElementById");
+					 match = reg.Match(result);
 					if (match.Value != "")
 						Login.get().LoginError = match.Value.Substring("<script language='javascript' defer>alert('".Length, match.Value.Length - "<script language='javascript' defer>alert('".Length - "');document.getElementById".Length);
 					return false;

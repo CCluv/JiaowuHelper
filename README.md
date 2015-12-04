@@ -1,4 +1,4 @@
-C#正方教务助手
+﻿C#正方教务助手
 =================================================
 
 正方教务系统的学生助手，模拟执行一些简易操作，乐趣多多。
@@ -13,9 +13,9 @@ C#正方教务助手
 * .Net 3.5 及以上环境即可
 
 ## 教务助手主页
+https://github.com/CCluv/JiaowuHelper/
+
+原作:
 
 http://www.loveyu.net/JiaowuHelper
 
-## 反馈地址
-
-http://www.loveyu.org/2606.html
